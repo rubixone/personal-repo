@@ -1,0 +1,12 @@
+FROM gradle:8.3.0-jdk20-alpine AS build
+RUN mkdir /home/gradle/src
+COPY --chown=gradle:gradle ./counter-service/ /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle bootJar
+
+FROM openjdk:21-jdk-slim
+EXPOSE 8080
+RUN mkdir /app
+COPY --from=build /home/gradle/src/ /app/src/
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
+ENTRYPOINT ["java","-jar","/app/spring-boot-application.jar"]

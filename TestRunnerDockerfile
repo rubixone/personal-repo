@@ -1,0 +1,4 @@
+FROM node:20-slim
+COPY counter-service-tests/ /home/node/tests
+WORKDIR /home/node/tests
+ENTRYPOINT ["node", "counterApiTest.js"]

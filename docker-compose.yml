@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+    java-api:
+        container_name: java-api
+        build: 
+            context: .
+            dockerfile: JavaServiceDockerfile
+        image: java-service:latest
+        expose:
+            - "8080"
+        #healthcheck:
+            #test: "exit 0"
+            #test: ["CMD", "curl", "-f", "http://java-api:8080"]
+            #interval: 10s
+            #timeout: 10s
+            #retries: 5
+            #start_period: 5s
+    test-runner:
+        container_name: test-runner
+        build: 
+            context: .
+            dockerfile: TestRunnerDockerfile
+        image: test-runner:latest
+        ports:
+            - "3000:3000"
+        #depends_on:
+            #java-api:
+                #condition: service_healthy
+        environment:
+            TESTS_TO_RUN: "java-api"
